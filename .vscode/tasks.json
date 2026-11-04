@@ -15,7 +15,7 @@
       "options": {
         "cwd": "${workspaceFolder}/src/packs"
       },
-      "command": "gulp build"
+      "command": "npm run build"
     }
   ]
 }

@@ -4,9 +4,9 @@
   "description": "FoundryVTT system for Castle Falkenstein.",
   "version": "0.0.0",
   "compatibility": {
-    "minimum": "9",
-    "verified": "12.330",
-    "maximum": "12"
+    "minimum": "13",
+    "verified": "14.370",
+    "maximum": "14"
   },
   "authors": [ {
       "name": "admiralnlson",
@@ -102,155 +102,136 @@
   "packs": [
     {
       "label": "Abilities",
-      "path": "build/packs/abilities.db",
+      "path": "build/packs/abilities",
       "name": "abilities",
       "type": "Item",
-      "system": "castle-falkenstein",
-      "module": "castle-falkenstein"
+      "system": "castle-falkenstein"
     },
     {
       "label": "Manuscriptum Mentallis",
-      "path": "build/packs/spells-1.db",
+      "path": "build/packs/spells-1",
       "name": "spells-1",
       "type": "Item",
-      "system": "castle-falkenstein",
-      "module": "castle-falkenstein"
+      "system": "castle-falkenstein"
     },
     {
       "label": "Ritual Writing of Psychic Binding",
-      "path": "build/packs/spells-2.db",
+      "path": "build/packs/spells-2",
       "name": "spells-2",
       "type": "Item",
-      "system": "castle-falkenstein",
-      "module": "castle-falkenstein"
+      "system": "castle-falkenstein"
     },
     {
       "label": "Agrivicca Rexus' Realm of Illusion",
-      "path": "build/packs/spells-3.db",
+      "path": "build/packs/spells-3",
       "name": "spells-3",
       "type": "Item",
-      "system": "castle-falkenstein",
-      "module": "castle-falkenstein"
+      "system": "castle-falkenstein"
     },
     {
       "label": "Megron's Realm of Dreaming",
-      "path": "build/packs/spells-4.db",
+      "path": "build/packs/spells-4",
       "name": "spells-4",
       "type": "Item",
-      "system": "castle-falkenstein",
-      "module": "castle-falkenstein"
+      "system": "castle-falkenstein"
     },
     {
       "label": "Realm of The Unknown Mind",
-      "path": "build/packs/spells-5.db",
+      "path": "build/packs/spells-5",
       "name": "spells-5",
       "type": "Item",
-      "system": "castle-falkenstein",
-      "module": "castle-falkenstein"
+      "system": "castle-falkenstein"
     },
     {
       "label": "Libram of Mystic Transformation",
-      "path": "build/packs/spells-6.db",
+      "path": "build/packs/spells-6",
       "name": "spells-6",
       "type": "Item",
-      "system": "castle-falkenstein",
-      "module": "castle-falkenstein"
+      "system": "castle-falkenstein"
     },
     {
       "label": "The Manuscriptum Universal Alchemic",
-      "path": "build/packs/spells-7.db",
+      "path": "build/packs/spells-7",
       "name": "spells-7",
       "type": "Item",
-      "system": "castle-falkenstein",
-      "module": "castle-falkenstein"
+      "system": "castle-falkenstein"
     },
     {
       "label": "Osman's Tome of Physical Movement",
-      "path": "build/packs/spells-8.db",
+      "path": "build/packs/spells-8",
       "name": "spells-8",
       "type": "Item",
-      "system": "castle-falkenstein",
-      "module": "castle-falkenstein"
+      "system": "castle-falkenstein"
     },
     {
       "label": "Libram of Temporal Control",
-      "path": "build/packs/spells-9.db",
+      "path": "build/packs/spells-9",
       "name": "spells-9",
       "type": "Item",
-      "system": "castle-falkenstein",
-      "module": "castle-falkenstein"
+      "system": "castle-falkenstein"
     },
     {
       "label": "Libram of Summonation",
-      "path": "build/packs/spells-10.db",
+      "path": "build/packs/spells-10",
       "name": "spells-10",
       "type": "Item",
-      "system": "castle-falkenstein",
-      "module": "castle-falkenstein"
+      "system": "castle-falkenstein"
     },
     {
       "label": "LeRoeun's Scrolls of Dimensional Movement",
-      "path": "build/packs/spells-11.db",
+      "path": "build/packs/spells-11",
       "name": "spells-11",
       "type": "Item",
-      "system": "castle-falkenstein",
-      "module": "castle-falkenstein"
+      "system": "castle-falkenstein"
     },
     {
       "label": "Dark Libram of Necromancy",
-      "path": "build/packs/spells-12.db",
+      "path": "build/packs/spells-12",
       "name": "spells-12",
       "type": "Item",
-      "system": "castle-falkenstein",
-      "module": "castle-falkenstein"
+      "system": "castle-falkenstein"
     },
     {
       "label": "Manuscript of Paranormal Divination",
-      "path": "build/packs/spells-13.db",
+      "path": "build/packs/spells-13",
       "name": "spells-13",
       "type": "Item",
-      "system": "castle-falkenstein",
-      "module": "castle-falkenstein"
+      "system": "castle-falkenstein"
     },
     {
       "label": "Manuscript of Elemental Shaping",
-      "path": "build/packs/spells-14.db",
+      "path": "build/packs/spells-14",
       "name": "spells-14",
       "type": "Item",
-      "system": "castle-falkenstein",
-      "module": "castle-falkenstein"
+      "system": "castle-falkenstein"
     },
     {
       "label": "Burton's On the Raised Forces of Nature",
-      "path": "build/packs/spells-15.db",
+      "path": "build/packs/spells-15",
       "name": "spells-15",
       "type": "Item",
-      "system": "castle-falkenstein",
-      "module": "castle-falkenstein"
+      "system": "castle-falkenstein"
     },
     {
       "label": "The Manual of Primal Forces Raised",
-      "path": "build/packs/spells-16.db",
+      "path": "build/packs/spells-16",
       "name": "spells-16",
       "type": "Item",
-      "system": "castle-falkenstein",
-      "module": "castle-falkenstein"
+      "system": "castle-falkenstein"
     },
     {
       "label": "lshigami's Realm of the Senses",
-      "path": "build/packs/spells-17.db",
+      "path": "build/packs/spells-17",
       "name": "spells-17",
       "type": "Item",
-      "system": "castle-falkenstein",
-      "module": "castle-falkenstein"
+      "system": "castle-falkenstein"
     },
     {
       "label": "Weapons",
-      "path": "build/packs/weapons.db",
+      "path": "build/packs/weapons",
       "name": "weapons",
       "type": "Item",
-      "system": "castle-falkenstein",
-      "module": "castle-falkenstein"
+      "system": "castle-falkenstein"
     }
   ],
   "languages": [

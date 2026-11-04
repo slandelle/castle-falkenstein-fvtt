@@ -1,4 +1,5 @@
-<form class="{{cssClass}} {{typeFlag}} {{readyToCast}}" autocomplete="off">
+<div class="cf-hand">
+<div class="hand-controls {{typeFlag}} {{readyToCast}}">
   {{#if featBeingPerformed}}
     <div class="header">
       <div class="ability-level-as-sentence">{{{abilityLevelAsSentenceHtml}}}</div>
@@ -77,7 +78,7 @@
         {{/ifequal}}
     </div>
   </div>
-</form>
+</div>
 <div class="handedCards {{typeFlag}}">
   <ol class="cards">
     {{#each cards as |card|}}
@@ -102,4 +103,5 @@
       </li>
     {{/each}}
   </ol>
+</div>
 </div>

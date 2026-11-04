@@ -1,65 +1,98 @@
 import { CASTLE_FALKENSTEIN } from "../config.mjs";
 import { CastleFalkenstein } from "../castle-falkenstein.mjs";
 
+const { HandlebarsApplicationMixin, DocumentSheetV2 } = foundry.applications.api;
+
 /**
  * Sheet for the Cards Hand.
- * @extends {CardsHand}
+ *
+ * The window itself only holds the hand controls (feat/spell header and buttons);
+ * the cards are rendered below it, overflowing the window frame (see the CSS).
+ *
+ * @extends {DocumentSheetV2}
  */
-export class CastleFalkensteinHandSheet extends CardsHand {
+export class CastleFalkensteinHandSheet extends HandlebarsApplicationMixin(DocumentSheetV2) {
 
   static HEIGHT_WITHOUT_FEAT_OR_SPELL = 57;
   static HEIGHT_WITH_FEAT = 116;
   static HEIGHT_WITH_SPELL = 116;
 
   /** @override */
-  static get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: [CastleFalkenstein.id, "sheet", "cards-hand", "cards-config"],
+  static DEFAULT_OPTIONS = {
+    classes: ["castle-falkenstein", "sheet", "cards-hand", "cards-config"], // not CastleFalkenstein.id: circular import, evaluated at class definition
+    position: {
       width: 350,
-      height: CastleFalkensteinHandSheet.HEIGHT_WITHOUT_FEAT_OR_SPELL,
-      resizable: {
-        resizeX: true,
-        resizeY: false
-      },
-      template: "systems/castle-falkenstein/src/documents/hand-sheet.hbs",
-    })
-  }
+      height: CastleFalkensteinHandSheet.HEIGHT_WITHOUT_FEAT_OR_SPELL
+    },
+    window: {
+      resizable: true
+    },
+    viewPermission: CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER,
+    form: {
+      submitOnChange: false,
+      closeOnSubmit: false
+    },
+    actions: {
+      openActor: CastleFalkensteinHandSheet.#onAction,
+      refillHand: CastleFalkensteinHandSheet.#onAction,
+      playHostFortuneCard: CastleFalkensteinHandSheet.#onAction,
+      triggerFeat: CastleFalkensteinHandSheet.#onAction,
+      cancelFeat: CastleFalkensteinHandSheet.#onAction,
+      chanceCard: CastleFalkensteinHandSheet.#onAction,
+      gatherPower: CastleFalkensteinHandSheet.#onAction,
+      releasePower: CastleFalkensteinHandSheet.#onAction,
+      castSpell: CastleFalkensteinHandSheet.#onAction,
+      cancelSpell: CastleFalkensteinHandSheet.#onAction
+    }
+  };
 
   /** @override */
-  render(force=false, options={}) {
-    const hand = this.object;
-    const spellActive = hand.getFlag(CastleFalkenstein.id, "spellBeingCast");
-    const featActive = hand.getFlag(CastleFalkenstein.id, "featBeingPerformed");
+  static PARTS = {
+    hand: {
+      template: "systems/castle-falkenstein/src/documents/hand-sheet.hbs"
+    }
+  };
 
-    super.render(force, foundry.utils.mergeObject(options, {
-      height: (featActive
-               ? CastleFalkensteinHandSheet.HEIGHT_WITH_FEAT
-               : (spellActive
-                  ? CastleFalkensteinHandSheet.HEIGHT_WITH_SPELL
-                  : CastleFalkensteinHandSheet.HEIGHT_WITHOUT_FEAT_OR_SPELL))
-    }));
-  }
+  /**
+   * Single dispatcher for all the hand controls (the 'data-action' attributes in the template).
+   * @this {CastleFalkensteinHandSheet}
+   */
+  static async #onAction(event, target) {
+    if (target.hasAttribute("disabled"))
+      return;
 
-  static async onPopout(app, popout) {
-    if (app?.options?.template === "systems/castle-falkenstein/src/documents/hand-sheet.hbs") {
-      const cardWidth = CastleFalkenstein.settings.cardWidth;
+    const hand = this.document;
+    const li = target.closest(".card");
+    const card = li ? hand.cards.get(li.dataset.cardId) : null;
 
-      const hand = app.object;
-      const deckType = hand.getFlag(CastleFalkenstein.id, "type");
-      const deck = CastleFalkenstein.deck(deckType);
-
-      const innerWidth = cardWidth * (deckType === "fortune" ? 2.5 : 3.5);
-      const innerHeight = CastleFalkenstein.computeCardHeight(deck) * (deckType === "fortune" ? 1.2 : 1.3)
-        + (deckType === "fortune" ? CastleFalkensteinHandSheet.HEIGHT_WITH_FEAT : CastleFalkensteinHandSheet.HEIGHT_WITH_SPELL) + 5;
-
-      popout.resizeTo(innerWidth + popout.outerWidth - app.options.width,
-                      innerHeight + popout.outerHeight - app.options.height);
+    switch (target.dataset.action) {
+      case "openActor":
+        return CastleFalkensteinHandSheet.openActor(hand);
+      case "refillHand":
+        return CastleFalkensteinHandSheet.refillHand(hand);
+      case "playHostFortuneCard":
+        return CastleFalkensteinHandSheet.playHostFortuneCard(card, hand);
+      case "triggerFeat":
+        return CastleFalkensteinHandSheet.triggerFeat(hand);
+      case "cancelFeat":
+        return CastleFalkensteinHandSheet.cancelFeat(hand);
+      case "chanceCard":
+        return CastleFalkensteinHandSheet.chanceCard(hand);
+      case "gatherPower":
+        return CastleFalkensteinHandSheet.gatherPower(hand);
+      case "releasePower":
+        event.stopPropagation(); // prevents the card click handler from triggering
+        return CastleFalkensteinHandSheet.releasePower(card, hand);
+      case "castSpell":
+        return CastleFalkensteinHandSheet.castSpell(hand);
+      case "cancelSpell":
+        return CastleFalkensteinHandSheet.cancelSpell(hand);
     }
   }
 
   /** @override */
   get title() {
-    const hand = this.object;
+    const hand = this.document;
 
     const actorFlag = hand.getFlag(CastleFalkenstein.id, "actor");
     const feat = hand.featBeingPerformed;
@@ -69,28 +102,30 @@ export class CastleFalkensteinHandSheet extends CardsHand {
       return hand.name;
   }
 
-  /** @override */
-  _onSortCard(event, card) {
-
-    // Identify a specific card as the drop target
-    let target = null;
-    const li = event.target.closest("[data-card-id]");
-    if ( li ) target = this.object.cards.get(li.dataset.cardId) ?? null;
-
-    if (li && li.dataset.cardId === card.id)
-      return this;
-
-    return super._onSortCard(event, card);
+  computeHeight() {
+    const hand = this.document;
+    if (hand.getFlag(CastleFalkenstein.id, "featBeingPerformed"))
+      return CastleFalkensteinHandSheet.HEIGHT_WITH_FEAT;
+    if (hand.getFlag(CastleFalkenstein.id, "spellBeingCast"))
+      return CastleFalkensteinHandSheet.HEIGHT_WITH_SPELL;
+    return CastleFalkensteinHandSheet.HEIGHT_WITHOUT_FEAT_OR_SPELL;
   }
 
   /** @override */
-  async getData(options) {
-    // Retrieve the data structure from the base sheet.
-    const context = await super.getData(options);
+  async _prepareContext(options) {
+    const context = await super._prepareContext(options);
 
-    const hand = this.object;
+    const hand = this.document;
 
     CastleFalkenstein.translateCardStack(hand);
+
+    context.owner = hand.isOwner;
+    context.inCompendium = !!hand.pack;
+
+    // Plain objects (rather than the Card documents themselves) so that display-only properties can be added freely.
+    context.cards = hand.cards.contents
+      .sort((a, b) => (a.sort || 0) - (b.sort || 0))
+      .map(card => ({ id: card.id, name: card.name, img: card.img, suit: card.suit, document: card }));
 
     context.typeFlag =  hand.getFlag(CastleFalkenstein.id, "type");
     let deck;
@@ -111,7 +146,7 @@ export class CastleFalkensteinHandSheet extends CardsHand {
       });
 
       context.cards.forEach(card => {
-        if (!context.featBeingPerformed || hand.isCorrectFeatSuit(card))
+        if (!context.featBeingPerformed || hand.isCorrectFeatSuit(card.document))
           card.correctSuit = "correct-suit";
         else
           card.correctSuit = "";
@@ -135,7 +170,7 @@ export class CastleFalkensteinHandSheet extends CardsHand {
         };
 
         context.cards.forEach(card => {
-          if (card.getFlag(CastleFalkenstein.id, "selected"))
+          if (card.document.getFlag(CastleFalkenstein.id, "selected"))
             card.selected = "selected";
           else
             card.selected = "";
@@ -204,29 +239,108 @@ export class CastleFalkensteinHandSheet extends CardsHand {
   }
 
   /** @override */
-  activateListeners(html) {
-    super.activateListeners(html);
+  _onRender(context, options) {
+    super._onRender(context, options);
+
+    // The window height depends on whether a feat is being performed / a spell is being cast.
+    const height = this.computeHeight();
+    if (this.position.height !== height)
+      this.setPosition({ height });
+
+    const html = this.element;
 
     this.rotateCards(html);
-  
-    html.find(".card").click(async(event) => { await this.onClickCard(event); });
 
-    html.find(".divorce-button").click(async(event) => { await this.onClickDivorceSuitSelect(event); });
-    
-    let handedCards = html.find("ol.cards");
-    handedCards.on("dragenter", (e) => {
-      e.target.classList.add("draghover");
+    html.querySelectorAll(".card").forEach(el => el.addEventListener("click", event => this.onClickCard(event)));
+
+    html.querySelectorAll(".divorce-button").forEach(el => el.addEventListener("click", event => this.onClickDivorceSuitSelect(event)));
+
+    // Drag & drop: cards may be dragged out of the hand, sorted within it, or dropped in from other stacks.
+    html.querySelectorAll("li.card[data-card-id]").forEach(li => {
+      li.setAttribute("draggable", "true");
+      li.addEventListener("dragstart", event => this.#onDragStart(event));
     });
-    handedCards.on("dragleave", (e) => {
-      e.target.classList.remove("draghover");
-    });
-    handedCards.on("drop", (e) => {
-      e.target.classList.remove("draghover");
-    });
+
+    const handedCards = html.querySelector("ol.cards");
+    if (handedCards) {
+      handedCards.addEventListener("dragenter", e => e.target.classList.add("draghover"));
+      handedCards.addEventListener("dragleave", e => e.target.classList.remove("draghover"));
+      handedCards.addEventListener("drop", e => e.target.classList.remove("draghover"));
+    }
+  }
+
+  /** @override */
+  _onFirstRender(context, options) {
+    super._onFirstRender(context, options);
+
+    // The root element persists across re-renders (only the parts are replaced), so bind these once.
+    this.element.addEventListener("dragover", event => event.preventDefault());
+    this.element.addEventListener("drop", event => this.#onDrop(event));
+  }
+
+  #onDragStart(event) {
+    const li = event.currentTarget;
+    const card = this.document.cards.get(li.dataset.cardId);
+    if (!card)
+      return;
+    event.dataTransfer.setData("text/plain", JSON.stringify(card.toDragData()));
+  }
+
+  async #onDrop(event) {
+    event.preventDefault();
+
+    let data;
+    try {
+      data = JSON.parse(event.dataTransfer.getData("text/plain"));
+    } catch (err) {
+      return;
+    }
+    if (data?.type !== "Card")
+      return;
+
+    const card = await CONFIG.Card.documentClass.fromDropData(data);
+    if (!card)
+      return;
+
+    // Sorting within the same hand
+    if (card.parent?.id === this.document.id)
+      return this.#onSortCard(event, card);
+
+    // Passing from another stack (the 'passCards' hook checks the stack types match)
+    if (!this.document.isOwner)
+      return;
+    try {
+      return await card.pass(this.document);
+    } catch (err) {
+      CastleFalkenstein.notif.error(err.message);
+    }
+  }
+
+  async #onSortCard(event, card) {
+    if (!this.document.isOwner)
+      return;
+
+    const li = event.target.closest("[data-card-id]");
+    if (!li || li.dataset.cardId === card.id)
+      return;
+
+    // Move the dragged card just before the card it was dropped onto, then renumber
+    const ordered = this.document.cards.contents
+      .filter(c => c.id !== card.id)
+      .sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    const targetIndex = ordered.findIndex(c => c.id === li.dataset.cardId);
+    if (targetIndex < 0)
+      return;
+    ordered.splice(targetIndex, 0, card);
+
+    const updates = ordered.map((c, i) => ({ _id: c.id, sort: (i + 1) * CONST.SORT_INTEGER_DENSITY }))
+                           .filter(u => this.document.cards.get(u._id).sort !== u.sort);
+    if (updates.length > 0)
+      await this.document.updateEmbeddedDocuments("Card", updates);
   }
 
   rotateCards(html) {
-    let cardsAreas = html.find(".cards");
+    const cardsAreas = html.querySelectorAll(".cards");
     const halfTranslation = CastleFalkenstein.settings.cardWidth/4;
     const halfAngle = 2;
     for (let area of cardsAreas) {
@@ -237,44 +351,6 @@ export class CastleFalkensteinHandSheet extends CardsHand {
         card.style["z-index"] = 302 + i*4;
       }
     }
-  }
-
-  /** @override */
-  async _onCardControl(event) {
-
-    super._onCardControl(event);
-
-    const button = event.currentTarget;
-    const li = button.closest(".card");
-    const card = li ? this.object.cards.get(li.dataset.cardId) : null;
-
-    const hand = this.object;
-
-    // Handle the control action
-    switch ( button.dataset.action ) {
-      case "openActor":
-        return CastleFalkensteinHandSheet.openActor(hand);
-      case "refillHand":
-        return CastleFalkensteinHandSheet.refillHand(hand);
-      case "playHostFortuneCard":
-        return CastleFalkensteinHandSheet.playHostFortuneCard(card, hand);
-      case "triggerFeat":
-        return CastleFalkensteinHandSheet.triggerFeat(hand);
-      case "cancelFeat":
-        return CastleFalkensteinHandSheet.cancelFeat(hand);
-      case "chanceCard":
-        return CastleFalkensteinHandSheet.chanceCard(hand);
-      case "gatherPower":
-        return CastleFalkensteinHandSheet.gatherPower(hand);
-      case "releasePower":
-        event.stopPropagation(); // prevents zoom on the card
-        return CastleFalkensteinHandSheet.releasePower(card, hand);
-      case "castSpell":
-        return CastleFalkensteinHandSheet.castSpell(hand);
-      case "cancelSpell":
-        return CastleFalkensteinHandSheet.cancelSpell(hand);
-    }
-
   }
 
   static openActorDisabled(hand) {
@@ -402,7 +478,7 @@ export class CastleFalkensteinHandSheet extends CardsHand {
   async onClickDivorceSuitSelect(event) {
     const suit = event.currentTarget.name;
 
-    const hand = this.object;
+    const hand = this.document;
     const fbp = await hand.getFlag(CastleFalkenstein.id, "featBeingPerformed");
     fbp.divorceSuit = suit;
     await hand.setFlag(CastleFalkenstein.id, "featBeingPerformed", fbp);
@@ -412,7 +488,7 @@ export class CastleFalkensteinHandSheet extends CardsHand {
 
   async onClickCard(event) {
 
-    const hand = this.object;
+    const hand = this.document;
     const typeFlag = hand.getFlag(CastleFalkenstein.id, "type");
 
     if (typeFlag === "fortune" && (hand.featBeingPerformed || (game.user.isGM && !hand.featBeingPerformed))) {
@@ -506,7 +582,7 @@ export class CastleFalkensteinHandSheet extends CardsHand {
     CastleFalkenstein.returnBackToDeck(hand.id, [card.id]);
   }
 
-  static async releasePower(card, hand, force = false) {
+  static async releasePower(card, hand) {
     if (!game.users.activeGM) {
       // planning to use executeAsGM below
       CastleFalkenstein.notif.warn(game.i18n.localize("castle-falkenstein.notifications.cannotCarryOutActionWithoutHost"));
@@ -522,18 +598,13 @@ export class CastleFalkensteinHandSheet extends CardsHand {
       const i18nDescription1 = game.i18n.format("castle-falkenstein.dialogs.thaumixologyReleaseAllPower.description1");
       const i18nDescription2 = game.i18n.localize("castle-falkenstein.dialogs.thaumixologyReleaseAllPower.description2");
 
-      if (!force) {
-        Dialog.confirm({
-          title: i18nTitle,
-          content: `<p>${i18nDescription1}</p><p>${i18nDescription2}</p>`,
-          yes: async () => {
-            CastleFalkensteinHandSheet.releasePower(card, hand, true);
-          },
-          defaultYes: false
-        });
-
+      const confirmed = await foundry.applications.api.DialogV2.confirm({
+        window: { title: i18nTitle },
+        content: `<p>${i18nDescription1}</p><p>${i18nDescription2}</p>`,
+        no: { default: true }
+      });
+      if (!confirmed)
         return;
-      }
     }
 
     await CastleFalkenstein.socket.executeAsGM("returnBackToDeck", hand.id, [card.id]);
@@ -573,13 +644,14 @@ export class CastleFalkensteinHandSheet extends CardsHand {
       const i18nDescription1 = game.i18n.localize("castle-falkenstein.dialogs.notEnoughPowerGathered.description1");
       const i18nDescription2 = game.i18n.localize("castle-falkenstein.dialogs.notEnoughPowerGathered.description2");
 
-      Dialog.confirm({
-        title: i18nTitle,
+      const confirmed = await foundry.applications.api.DialogV2.confirm({
+        window: { title: i18nTitle },
         content: `<p>${i18nDescription1}</p><p>${i18nDescription2}</p>`,
-        yes: () => CastleFalkensteinHandSheet.castSpell(hand, true),
-        defaultYes: false
+        no: { default: true }
       });
-      return;
+      if (!confirmed)
+        return;
+      force = true;
     }
 
     const actor = game.actors.get(actorId);

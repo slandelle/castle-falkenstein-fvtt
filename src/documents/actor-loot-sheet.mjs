@@ -4,7 +4,7 @@ import { CastleFalkenstein } from "../castle-falkenstein.mjs";
  * Extend the basic ActorSheet with some very simple modifications
  * @extends {ActorSheet}
  */
-export class CastleFalkensteinLootSheet extends ActorSheet {
+export class CastleFalkensteinLootSheet extends foundry.appv1.sheets.ActorSheet {
   /** @override */
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
@@ -45,11 +45,7 @@ export class CastleFalkensteinLootSheet extends ActorSheet {
     itemData.sort = this.newItemSortValue();
 
     // Create the owned item
-    if (game.release.generation >= 12) {
-      return this._onDropItemCreate(itemData, event);
-    } else {
-      return this._onDropItemCreate(itemData);
-    }
+    return this._onDropItemCreate(itemData, event);
   }
 
   /** @override */

@@ -31,9 +31,9 @@ export class CastleFalkensteinCharacterSheet extends CastleFalkensteinLootSheet 
     context.diaryUuid = context.diaryIfExists?.uuid;
     context.diaryName = context.diaryIfExists ? context.diaryIfExists.name : context.actor.computeDiaryName();
 
-    context.enrichedDescription = await TextEditor.enrichHTML(context.system.description);
-    context.enrichedPlayerNotes = await TextEditor.enrichHTML(context.system.playerNotes);
-    context.enrichedHostNotes = await TextEditor.enrichHTML(context.system.hostNotes);
+    context.enrichedDescription = await foundry.applications.ux.TextEditor.implementation.enrichHTML(context.system.description);
+    context.enrichedPlayerNotes = await foundry.applications.ux.TextEditor.implementation.enrichHTML(context.system.playerNotes);
+    context.enrichedHostNotes = await foundry.applications.ux.TextEditor.implementation.enrichHTML(context.system.hostNotes);
 
     context.concealLabels = CASTLE_FALKENSTEIN.weaponConceals;
 
@@ -165,7 +165,6 @@ export class CastleFalkensteinCharacterSheet extends CastleFalkensteinLootSheet 
       roll.toMessage({
         speaker: ChatMessage.getSpeaker({ actor: this.actor }),
         flavor: label,
-        rollMode: game.settings.get("core", "rollMode"),
       });
       return roll;
     }

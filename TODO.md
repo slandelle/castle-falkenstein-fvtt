@@ -7,7 +7,7 @@
 
 ## Foundry Versions
 
-+ Remove template.json from any future release which is compatible with V12 or later only (file was needed up to V12.317)
++ Migrate the actor and item sheets and the Define Spell form to ApplicationV2 (ApplicationV1 is deprecated since V13)
 
 ## Shortlist
 

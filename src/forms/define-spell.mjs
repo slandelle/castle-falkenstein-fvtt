@@ -3,7 +3,7 @@ import { CastleFalkenstein } from "../castle-falkenstein.mjs";
 import { CastleFalkensteinCards } from "../documents/cards.mjs";
 
 // A form for initiating a spell
-export class CastleFalkensteinDefineSpell extends FormApplication {
+export class CastleFalkensteinDefineSpell extends foundry.appv1.api.FormApplication {
 
   /** @override */
   static get defaultOptions() {

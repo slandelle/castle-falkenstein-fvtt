@@ -42,21 +42,16 @@ export class CastleFalkensteinCombat extends Combat {
     return this;
   }
 
-	#getCombatant(li, combat) {
-		const combatantId = li?.dataset?.combatantId;
-		if (!combatantId) return;
-		return combat.combatants.get(combatantId);
-	}
-
-  onRenderCombatTracker(app, html, options) {
+  onRenderCombatTracker(html) {
     if (!game.user.isGM)
       return;
 
 		// Turn initiative spans into initiative inputs for all combatants.
-		const combatants = html[0].querySelectorAll("li.combatant");
+		const combatants = html.querySelectorAll("li.combatant[data-combatant-id]");
 		for (const li of combatants) {
  
-			const combatant = this.#getCombatant(li, options.combat);
+			const combatant = this.combatants.get(li.dataset.combatantId);
+			if (!combatant) continue;
 
 			const initiativeSpan = li.querySelector("span.initiative");
 			if (initiativeSpan) {
@@ -81,7 +76,7 @@ export class CastleFalkensteinCombat extends Combat {
 				// Handle the initialive losing focus.
 				initiative.addEventListener("blur", e => {
 					const initiative = parseFloat(e.currentTarget.value);
-					options.combat.setInitiative(combatant.id, initiative);
+					this.setInitiative(combatant.id, initiative);
 				});
 			}
 		}

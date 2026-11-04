@@ -2,19 +2,15 @@ import { CastleFalkenstein } from "../castle-falkenstein.mjs";
 
 /**
  * Sheet for the Cards Deck.
- * @extends {CardsConfig}
+ * @extends {CardDeckConfig}
  */
-export class CastleFalkensteinDeckSheet extends CardsConfig {
+export class CastleFalkensteinDeckSheet extends foundry.applications.sheets.CardDeckConfig {
 
-   /** @override */
-   async getData(options) {
-    // Retrieve the data structure from the base sheet.
-    const context = await super.getData(options);
+  /** @override */
+  async _prepareContext(options) {
+    // translate card names (in memory only) before the core sheet prepares its card list
+    CastleFalkenstein.translateCardStack(this.document);
 
-    const deck = this.object;
-
-    CastleFalkenstein.translateCardStack(deck);
-
-    return context;
-   }
+    return super._prepareContext(options);
+  }
 }

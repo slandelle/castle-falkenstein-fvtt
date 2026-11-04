@@ -770,35 +770,46 @@ div.divorce {
 
 /* Card hands */
 
-.app.castle-falkenstein.cards-hand.window-app .window-header {
+.castle-falkenstein.cards-hand .window-header {
   width: 100%;
 }
 
-.app.castle-falkenstein.cards-hand .card-hand-controls {
+/* The hand window only holds the controls: the cards overflow below the window frame. */
+.application.castle-falkenstein.cards-hand,
+.application.castle-falkenstein.cards-hand .window-content {
+  overflow: visible;
+}
+
+.application.castle-falkenstein.cards-hand .window-content {
+  height: auto;
+  padding: 5px;
+}
+
+.castle-falkenstein.cards-hand .card-hand-controls {
   display: flex;
   justify-content: center;
 }
 
-.app.castle-falkenstein.cards-hand .harmonic {
+.castle-falkenstein.cards-hand .harmonic {
   min-height: 22px;
   position: relative;
 }
 
-.app.castle-falkenstein.cards-hand .harmonic-txt {
+.castle-falkenstein.cards-hand .harmonic-txt {
   line-height: 22px;
   position: absolute;
   bottom: 0;
 }
 
-.app.castle-falkenstein.cards-hand div.spell-being-cast {
+.castle-falkenstein.cards-hand div.spell-being-cast {
   display: grid;
   grid-gap: 5px;
   grid-template-columns: 1fr auto auto;
   align-items: center;
 }
 
-.app.castle-falkenstein.cards-hand div.feat-being-performed .ability-level-as-sentence,
-.app.castle-falkenstein.cards-hand div.spell-being-cast .spell-name {
+.castle-falkenstein.cards-hand div.feat-being-performed .ability-level-as-sentence,
+.castle-falkenstein.cards-hand div.spell-being-cast .spell-name {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -807,18 +818,18 @@ div.divorce {
   font-weight: bold;
 }
 
-.app.castle-falkenstein.cards-hand hr.feat-being-performed,
-.app.castle-falkenstein.cards-hand hr.spell-being-cast {
+.castle-falkenstein.cards-hand hr.feat-being-performed,
+.castle-falkenstein.cards-hand hr.spell-being-cast {
   margin-top: 7px;
   margin-bottom: 7px;
 }
 
-.app.castle-falkenstein.cards-hand .card-hand-controls .flexrow {
+.castle-falkenstein.cards-hand .card-hand-controls .flexrow {
   width: 300px;
   justify-content: space-evenly;
 }
 
-.app.castle-falkenstein.cards-hand form {
+.castle-falkenstein.cards-hand .hand-controls {
   max-height: 80px;
 }
 
@@ -1121,11 +1132,11 @@ div.gm-screen-grid-cell-content.castle-falkenstein.actor > form li.item {
 }
 
 .castle-falkenstein .suit-symbol-spades,
-.app.castle-falkenstein.cards-hand .suit-symbol-spades,
+.castle-falkenstein.cards-hand .suit-symbol-spades,
 .chat-message .suit-symbol-spades,
 .castle-falkenstein .suit-select *:nth-child(2),
 .castle-falkenstein .suit-symbol-clubs,
-.app.castle-falkenstein.cards-hand .suit-symbol-clubs,
+.castle-falkenstein.cards-hand .suit-symbol-clubs,
 .chat-message .suit-symbol-clubs,
 .castle-falkenstein .suit-select *:nth-child(5),
 .castle-falkenstein .suit-select.suit-black {
@@ -1133,11 +1144,11 @@ div.gm-screen-grid-cell-content.castle-falkenstein.actor > form li.item {
 }
 
 .castle-falkenstein .suit-symbol-hearts,
-.app.castle-falkenstein.cards-hand .suit-symbol-hearts,
+.castle-falkenstein.cards-hand .suit-symbol-hearts,
 .chat-message .suit-symbol-hearts,
 .castle-falkenstein .suit-select *:nth-child(3),
 .castle-falkenstein .suit-symbol-diamonds,
-.app.castle-falkenstein.cards-hand .suit-symbol-diamonds,
+.castle-falkenstein.cards-hand .suit-symbol-diamonds,
 .chat-message .suit-symbol-diamonds,
 .castle-falkenstein .suit-select *:nth-child(4),
 .castle-falkenstein .suit-select.suit-red {
@@ -1205,7 +1216,7 @@ div.gm-screen-grid-cell-content.castle-falkenstein.actor > form li.item {
   }
 }
 
-.app.castle-falkenstein.cards-hand section.window-content {
+.castle-falkenstein.cards-hand section.window-content {
   overflow: visible;
   height: calc(100% - 30px);
   max-height: calc(100% - 30px);
@@ -1214,8 +1225,8 @@ div.gm-screen-grid-cell-content.castle-falkenstein.actor > form li.item {
   color: #191813 !important;
 }
 
-.app.castle-falkenstein.cards-hand section.window-content div.spell-being-cast,
-.app.castle-falkenstein.cards-hand section.window-content div.harmonic {
+.castle-falkenstein.cards-hand section.window-content div.spell-being-cast,
+.castle-falkenstein.cards-hand section.window-content div.harmonic {
   color: var(--color-text-dark-primary);
 }
 

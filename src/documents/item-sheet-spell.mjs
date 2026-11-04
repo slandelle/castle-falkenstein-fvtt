@@ -5,7 +5,7 @@ import { CastleFalkenstein } from "../castle-falkenstein.mjs";
  * Sheet for the 'spell' item type.
  * @extends {ItemSheet}
  */
-export class CastleFalkensteinSpellSheet extends ItemSheet {
+export class CastleFalkensteinSpellSheet extends foundry.appv1.sheets.ItemSheet {
 
   /** @override */
   static get defaultOptions() {
@@ -23,7 +23,7 @@ export class CastleFalkensteinSpellSheet extends ItemSheet {
     const context = await super.getData(options);
     // convenience so context and name/target are aligned for system properties
     context.system = context.item.system;
-    context.enrichedDescription = await TextEditor.enrichHTML(context.system.description, {async: true});
+    context.enrichedDescription = await foundry.applications.ux.TextEditor.implementation.enrichHTML(context.system.description);
     context.CASTLE_FALKENSTEIN = CASTLE_FALKENSTEIN;
     return context;
   }

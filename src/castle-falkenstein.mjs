@@ -298,11 +298,7 @@ export class CastleFalkenstein {
     return;
   }
 
-  static async onRenderPlayerList(application, html, data) {
-    this.checkOwnershipsOnDecks();
-  }
-
-  static async onRenderPlayerList(application, html, data) {
+  static async onRenderPlayers(application, html, context) {
     this.checkOwnershipsOnDecks();
   }
 
@@ -520,11 +516,7 @@ export class CastleFalkenstein {
       messageData.borderColor = game.user.color.css;
     }
 
-    if (game.release.generation >= 12) {
-      messageData.type = messageData.speaker ? CONST.CHAT_MESSAGE_STYLES.IC : CONST.CHAT_MESSAGE_STYLES.OOC;
-    } else {
-      messageData.type = messageData.speaker ? CONST.CHAT_MESSAGE_TYPES.IC : CONST.CHAT_MESSAGE_TYPES.OOC;
-    }
+    messageData.style = messageData.speaker ? CONST.CHAT_MESSAGE_STYLES.IC : CONST.CHAT_MESSAGE_STYLES.OOC;
 
     return ChatMessage.create(messageData);
   }
@@ -542,21 +534,11 @@ export class CastleFalkenstein {
     CONFIG.Combat.documentClass = CastleFalkensteinCombat;
     CONFIG.Cards.documentClass = CastleFalkensteinCards;
 
-    if (game.release.generation >= 11) {
-      CONFIG.Actor.dataModels.character = CastleFalkensteinCharacterDataModel;
-      //CONFIG.Actor.dataModels.loot = CastleFalkensteinLootDataModel;
-      // the system does not have Actor packs, but users might.
-      //CONFIG.Actor.compendiumIndexFields = ["name", "system.description"];
-      
-      CONFIG.Item.dataModels.ability = CastleFalkensteinAbilityDataModel;
-      CONFIG.Item.dataModels.weapon = CastleFalkensteinWeaponDataModel;
-      CONFIG.Item.dataModels.possession = CastleFalkensteinPossessionDataModel;
-      CONFIG.Item.dataModels.spell = CastleFalkensteinSpellDataModel;
-      //CONFIG.Item.compendiumIndexFields = ["name", "system.description"];
-
-      //game.packs.forEach(p => p.getIndex({fields: ["name", "system.description"]}));
-      //game.packs.forEach(p => p.getIndex({fields: ["name"]}));
-    }
+    CONFIG.Actor.dataModels.character = CastleFalkensteinCharacterDataModel;
+    CONFIG.Item.dataModels.ability = CastleFalkensteinAbilityDataModel;
+    CONFIG.Item.dataModels.weapon = CastleFalkensteinWeaponDataModel;
+    CONFIG.Item.dataModels.possession = CastleFalkensteinPossessionDataModel;
+    CONFIG.Item.dataModels.spell = CastleFalkensteinSpellDataModel;
 
     // Declare Castle Falkenstein deck presets
     CONFIG.Cards.presets.castleFalkensteinFortuneDeck = {
@@ -573,33 +555,17 @@ export class CastleFalkenstein {
     this.registerSettings();
 
     this.registerSheets();
+
+    this.configureMessageModes();
   }
 
   static async onSetup() {
 
-    // Unregister default sheets
-    if (CONFIG["Actor"]?.sheetClasses?.base)
-      Actors.unregisterSheet("core", ActorSheet, {
-        types: ["base"]
-      });
-    Actors.unregisterSheet("core", ActorSheet, {
-      types: ["character"]
-    });
-    if (CONFIG["Item"]?.sheetClasses?.base)
-      Items.unregisterSheet("core", ItemSheet, {
-        types: ["base"]
-      });
-    Items.unregisterSheet("core", ItemSheet, {
-      types: ["ability", "possession", "weapon", "spell"]
-    });
-    CardStacks.unregisterSheet("core", CardsConfig, {
+    // Unregister the core deck sheet.
+    // The core hand sheet is kept: it is still required for Duels for instance.
+    foundry.documents.collections.CardStacks.unregisterSheet("core", foundry.applications.sheets.CardDeckConfig, {
       types: ["deck"]
     });
-    // Default sheet still required for Duels for instance.
-    //
-    //CardStacks.unregisterSheet("core", CardsHand, {
-    //  types: ["hand"]
-    //});
 
     if (game.settings.get("core", "language") !== "en") {
       game.babele?.setSystemTranslationsDir("lang/babele");
@@ -621,11 +587,10 @@ export class CastleFalkenstein {
   static async onReady() {
 
     // game.user is not defined early enough to be able to set this in CastleFalkensteinCharacterDataModel.defineSchema
-    if (game.release.generation >= 11) {
-      CONFIG.Actor.dataModels.character.schema.fields.hostNotes.textSearch = game.user.isGM;
-    }
+    CONFIG.Actor.dataModels.character.schema.fields.hostNotes.textSearch = game.user.isGM;
   
-    CONFIG.Cards.sheetClasses.hand["core.CardsHand"].canBeDefault = false;
+    const coreHandSheet = CONFIG.Cards.sheetClasses.hand?.["core.CardHandConfig"];
+    if (coreHandSheet) coreHandSheet.canBeDefault = false;
 
     await this.prepareCardStacks();
 
@@ -640,6 +605,8 @@ export class CastleFalkenstein {
     }
 
     await this.iconUpgrade();
+
+    await this.resetRemovedMessageMode();
 
     if (game.modules.get("popout")) {
       if (game.settings.get("popout", "trueBoundingBox")) {
@@ -775,6 +742,17 @@ export class CastleFalkenstein {
     enabled: "enabled"
   };
 
+  /**
+   * Re-render the open windows of a given application class (ApplicationV2 instances and legacy ApplicationV1 ones).
+   */
+  static rerenderOpenApps(appClass) {
+    const apps = [...foundry.applications.instances.values(), ...Object.values(ui.windows)];
+    for (const app of apps) {
+      if (app instanceof appClass && app.rendered)
+        app.render();
+    }
+  }
+
   static registerSettings() {
 
     const deckSelect = (deckType) => {
@@ -792,14 +770,9 @@ export class CastleFalkenstein {
         )
       });
   
-      if (game.release.generation >= 12) {
-        setting.type = new foundry.data.fields.DocumentIdField({
-          choices: choicesLambda
-        });
-      } else {
-        setting.type = String;
-        setting.choices = choicesLambda;
-      }
+      setting.type = new foundry.data.fields.DocumentIdField({
+        choices: choicesLambda
+      });
   
       return setting;
     };
@@ -841,13 +814,7 @@ export class CastleFalkenstein {
         },
         default: this.DIVORCE_VARIATION_OPTIONS.disabled,
         requiresReload: false,
-        onChange: value => {
-          for (const window of Object.values(ui.windows)) {
-            if (window instanceof CastleFalkensteinHandSheet) {
-              if (window.rendered) window.render();
-            }
-          }
-        }
+        onChange: value => CastleFalkenstein.rerenderOpenApps(CastleFalkensteinHandSheet)
       },
       hardLimitVariation: {
         scope: "world",
@@ -858,13 +825,7 @@ export class CastleFalkenstein {
         },
         default: this.HARD_LIMIT_VARIATION_OPTIONS.disabled.str,
         requiresReload: false,
-        onChange: value => {
-          for (const window of Object.values(ui.windows)) {
-            if (window instanceof CastleFalkensteinHandSheet) {
-              if (window.rendered) window.render();
-            }
-          }
-        }
+        onChange: value => CastleFalkenstein.rerenderOpenApps(CastleFalkensteinHandSheet)
       },
       halfOffVariation: {
         scope: "world",
@@ -875,13 +836,7 @@ export class CastleFalkenstein {
         },
         default: this.HALF_OFF_VARIATION_OPTIONS.disabled,
         requiresReload: false,
-        onChange: value => {
-          for (const window of Object.values(ui.windows)) {
-            if (window instanceof CastleFalkensteinHandSheet) {
-              if (window.rendered) window.render();
-            }
-          }
-        }
+        onChange: value => CastleFalkenstein.rerenderOpenApps(CastleFalkensteinHandSheet)
       },
       thaumixologyVariation: {
         scope: "world",
@@ -892,13 +847,7 @@ export class CastleFalkenstein {
         config: true,
         default: this.THAUMIXOLOGY_VARIATION_OPTIONS.disabled,
         requiresReload: false,
-        onChange: value => {
-          for (const window of Object.values(ui.windows)) {
-            if (window instanceof CastleFalkensteinDefineSpell) {
-              if (window.rendered) window.render();
-            }
-          }
-        }
+        onChange: value => CastleFalkenstein.rerenderOpenApps(CastleFalkensteinDefineSpell)
       },
       // Player settings
       cardWidth: {
@@ -930,46 +879,46 @@ export class CastleFalkenstein {
 
   static registerSheets() {
 
-    Actors.registerSheet(this.id, CastleFalkensteinCharacterSheet, {
+    foundry.documents.collections.Actors.registerSheet(this.id, CastleFalkensteinCharacterSheet, {
       types: ["character"],
       label: "castle-falkenstein.sheets.character",
       makeDefault: true
     });
 
-    Actors.registerSheet(this.id, CastleFalkensteinLootSheet, {
+    foundry.documents.collections.Actors.registerSheet(this.id, CastleFalkensteinLootSheet, {
       types: ["loot"],
       label: "castle-falkenstein.sheets.loot",
       makeDefault: true
     });
 
-    Items.registerSheet(this.id, CastleFalkensteinAbilitySheet, {
+    foundry.documents.collections.Items.registerSheet(this.id, CastleFalkensteinAbilitySheet, {
       types: ["ability"],
       label: "castle-falkenstein.sheets.ability",
       makeDefault: true
     });
-    Items.registerSheet(this.id, CastleFalkensteinPossessionSheet, {
+    foundry.documents.collections.Items.registerSheet(this.id, CastleFalkensteinPossessionSheet, {
       types: ["possession"],
       label: "castle-falkenstein.sheets.possession",
       makeDefault: true
     });
-    Items.registerSheet(this.id, CastleFalkensteinWeaponSheet, {
+    foundry.documents.collections.Items.registerSheet(this.id, CastleFalkensteinWeaponSheet, {
       types: ["weapon"],
       label: "castle-falkenstein.sheets.weapon",
       makeDefault: true
     });
-    Items.registerSheet(this.id, CastleFalkensteinSpellSheet, {
+    foundry.documents.collections.Items.registerSheet(this.id, CastleFalkensteinSpellSheet, {
       types: ["spell"],
       label: "castle-falkenstein.sheets.spell",
       makeDefault: true
     });
     
-    CardStacks.registerSheet(this.id, CastleFalkensteinDeckSheet, {
+    foundry.documents.collections.CardStacks.registerSheet(this.id, CastleFalkensteinDeckSheet, {
       types: ["deck"],
       label: "castle-falkenstein.sheets.deck",
       makeDefault: true
     });
     
-    CardStacks.registerSheet(this.id, CastleFalkensteinHandSheet, {
+    foundry.documents.collections.CardStacks.registerSheet(this.id, CastleFalkensteinHandSheet, {
       types: ["hand"],
       label: "castle-falkenstein.sheets.hand",
       makeDefault: true
@@ -979,7 +928,7 @@ export class CastleFalkenstein {
 
   // Load all the templates for handlebars partials.
   static async preLoadTemplates() {
-    return loadTemplates([
+    return foundry.applications.handlebars.loadTemplates([
       // Actor partials
       "systems/castle-falkenstein/src/documents/actor-character-sheet-abilities.hbs",
       "systems/castle-falkenstein/src/documents/actor-character-sheet-possessions.hbs",
@@ -988,20 +937,16 @@ export class CastleFalkenstein {
     ]);
   }
 
-  static async onRenderChatMessage(chatMessage, html, messageData) {
+  static onRenderChatMessageHTML(chatMessage, html, context) {
     // make the 'success ranges' section expand/collapse on click
-    html.find(".feat-chat-ranges-button")?.click(event => {
-      let button = event.currentTarget;
-      var content = button.nextElementSibling;
-      if (content.style.display === "block") {
-        content.style.display = "none";
-      } else {
-        content.style.display = "block";
-      }
-    });
+    html.querySelectorAll(".feat-chat-ranges-button").forEach(button => button.addEventListener("click", event => {
+      const content = event.currentTarget.nextElementSibling;
+      content.style.display = (content.style.display === "block") ? "none" : "block";
+    }));
 
     // make the overall message have the same color as its author
-    html[0].style.borderColor = messageData.author?.color.css;
+    if (chatMessage.author?.color)
+      html.style.borderColor = chatMessage.author.color.css;
   }
 
   static async addMacroAtHotbarSlot(name, img, command, slot) {
@@ -1020,7 +965,7 @@ export class CastleFalkenstein {
     if (!doc)
       return;
 
-    if (doc instanceof CastleFalkensteinItem && doc.parent instanceof CastleFalkensteinCharacter) {
+    if (doc instanceof CastleFalkensteinItem && doc.parent instanceof CastleFalkensteinActor) {
       const macroName = `${doc.rollType.i18nLabel} ${doc.name} ${game.user.isGM ? "(" + doc.parent.name + ")" : ""}`;
       CastleFalkenstein.addMacroAtHotbarSlot(macroName, doc.img, `fromUuidSync("${doc.uuid}").roll();`, slot);
       return false;
@@ -1063,77 +1008,83 @@ export class CastleFalkenstein {
     fromUuidSync(documentUuid)
   }
 
-  static onRenderSidebarTab(app, html, data) {
-    if (app.tabName !== "chat")
+  /**
+   * Message visibility modes ("roll modes" up to v13, "message modes" from v14), for a card-based system.
+   * Only 2 modes are offered: public and private (to the Host). Blind and self modes are removed.
+   */
+  static get MESSAGE_MODES() {
+    if (game.release.generation >= 14) {
+      return {
+        setting: "messageMode",
+        registry: CONFIG.ChatMessage.modes,
+        public: "public",
+        private: "gm",
+        removed: ["blind", "self"]
+      };
+    }
+    return {
+      setting: "rollMode",
+      registry: CONFIG.Dice.rollModes,
+      public: "publicroll",
+      private: "gmroll",
+      removed: ["blindroll", "selfroll"]
+    };
+  }
+
+  static configureMessageModes() {
+    const modes = this.MESSAGE_MODES;
+    if (!modes.registry)
       return;
 
-    const diceIcon = html.find("#chat-controls .chat-control-icon i");
-    if (diceIcon) {
-      diceIcon[0].classList = "cf-poker-hand";
-    }
-
-    // hijack of "Roll Mode" into something which makes more sense for a card-based system like Castle Falkenstein
-
-    const optgroup = html.find("#chat-controls .roll-type-select optgroup");
-    if (optgroup)
-      optgroup[0].label = game.i18n.localize("castle-falkenstein.chat.messageVisibility");
-
-    const optionReplacements = {
-      [CONST.DICE_ROLL_MODES.PUBLIC]: game.i18n.localize("castle-falkenstein.chat.publicMessage"),
-      [CONST.DICE_ROLL_MODES.PRIVATE]: game.i18n.localize("castle-falkenstein.chat.privateHostMessage"),
-      [CONST.DICE_ROLL_MODES.BLIND]: null, // Remove this option
-      [CONST.DICE_ROLL_MODES.SELF]: null   // Remove this option
+    const relabel = (key, i18nKey) => {
+      const entry = modes.registry[key];
+      if (typeof entry === "string")
+        modes.registry[key] = i18nKey;
+      else if (entry)
+        entry.label = i18nKey;
     };
+    relabel(modes.public, "castle-falkenstein.chat.publicMessage");
+    relabel(modes.private, "castle-falkenstein.chat.privateHostMessage");
 
-    // Select the <select> element
-    const select = document.querySelector("#chat-controls .roll-type-select");
+    for (const key of modes.removed)
+      delete modes.registry[key];
+  }
 
-    // Loop through options in the optgroup (in reverse order because we're removing some options)
-    for (let i = select.options.length - 1; i >= 0; --i) {
-      const option = select.options[i];
-
-      // Check if the option should be renamed or removed
-      if (optionReplacements[option.value] !== undefined) {
-        if (optionReplacements[option.value] === null) {
-            // Remove the option
-            select.remove(i);
-        } else {
-            // Rename the option
-            option.text = optionReplacements[option.value];
-        }
-      }
-    }
+  static async resetRemovedMessageMode() {
+    const modes = this.MESSAGE_MODES;
+    if (modes.removed.includes(game.settings.get("core", modes.setting)))
+      await game.settings.set("core", modes.setting, modes.public);
   }
 
   static onPreCreateChatMessage(message, options, userId) {
     // Alter the visibility of both system-generated and manually-created messages.
     //
-    // See onRenderSidebarTab(): only 2 modes are allowed: PUBLIC and PRIVATE. BLIND and SELF have been disabled.
+    // See configureMessageModes(): only 2 modes are allowed: public and private.
     //
-    const messageVisibility = game.settings.get("core", "rollMode");
-    if (messageVisibility === CONST.DICE_ROLL_MODES.PRIVATE && (!message.whisper || message.whisper.length === 0)) {
+    const modes = this.MESSAGE_MODES;
+    const messageVisibility = game.settings.get("core", modes.setting);
+    if (messageVisibility === modes.private && (!message.whisper || message.whisper.length === 0)) {
       message.updateSource({
         whisper: ChatMessage.getWhisperRecipients("GM").map(u => u.id),
         speaker: null
       });
     }
-    
   }
 
   static refreshActorSheetIfDiary(sheet) {
     // if a Diary, refresh the matching (not Token) Actor's sheet if open
-    const journalEntry = sheet.object;
-    if (!journalEntry.getFlag(CastleFalkenstein.id, "type") === "diary")
+    const journalEntry = sheet.document;
+    if (journalEntry?.getFlag(CastleFalkenstein.id, "type") !== "diary")
       return;
     const actorId = journalEntry.getFlag(CastleFalkenstein.id, "actor");
     game.actors.get(actorId)?.sheet.render(false);
   }
 
-  static onRenderJournalSheet(sheet, html, data) {
+  static onRenderJournalEntrySheet(sheet, html, context) {
     CastleFalkenstein.refreshActorSheetIfDiary(sheet);
   }
 
-  static onCloseJournalSheet(sheet, html) {
+  static onCloseJournalEntrySheet(sheet) {
     CastleFalkenstein.refreshActorSheetIfDiary(sheet);
   }
 
@@ -1184,19 +1135,15 @@ Hooks.on("init", () => CastleFalkenstein.onInit());
 Hooks.on("setup", () => CastleFalkenstein.onSetup());
 Hooks.on("ready", () => CastleFalkenstein.onReady());
 
-Hooks.on("renderChatMessage", (chatMessage, html, messageData) => CastleFalkenstein.onRenderChatMessage(chatMessage, html, messageData));
+Hooks.on("renderChatMessageHTML", (chatMessage, html, context) => CastleFalkenstein.onRenderChatMessageHTML(chatMessage, html, context));
 
 Hooks.on("hotbarDrop", (hotbar, data, slot) => { return CastleFalkenstein.onHotbarDrop(hotbar, data, slot) });
 
-Hooks.on("renderPlayerList", (application, html, data) => CastleFalkenstein.onRenderPlayerList(application, html, data));
-
-Hooks.on("PopOut:popout", (app, popout) => { return CastleFalkensteinHandSheet.onPopout(app, popout) });
+Hooks.on("renderPlayers", (application, html, context) => CastleFalkenstein.onRenderPlayers(application, html, context));
 
 Hooks.once("socketlib.ready", () => CastleFalkenstein.setupSocket());
 
-Hooks.on("renderCombatTracker", (app, html, options) => game.combat?.onRenderCombatTracker(app, html, options));
-
-Hooks.on("renderSidebarTab", (app, html, data) => CastleFalkenstein.onRenderSidebarTab(app, html, data));
+Hooks.on("renderCombatTracker", (app, html, context) => app.viewed?.onRenderCombatTracker?.(html));
 
 Hooks.on("preCreateChatMessage", (message, options, userId) => CastleFalkenstein.onPreCreateChatMessage(message, options, userId));
 
@@ -1204,9 +1151,9 @@ Hooks.on("passCards", (from, to, options) => CastleFalkensteinCards.onPassCards(
 
 Hooks.on("renderCastleFalkensteinCharacterSheet", (app, html, data) => CastleFalkensteinCharacterSheet.onRender(app, html, data));
 
-Hooks.on("renderJournalSheet", (sheet, html, data) => CastleFalkenstein.onRenderJournalSheet(sheet, html, data));
+Hooks.on("renderJournalEntrySheet", (sheet, html, context) => CastleFalkenstein.onRenderJournalEntrySheet(sheet, html, context));
 
-Hooks.on("closeJournalSheet", (sheet, html) =>  CastleFalkenstein.onCloseJournalSheet(sheet, html));
+Hooks.on("closeJournalEntrySheet", (sheet) => CastleFalkenstein.onCloseJournalEntrySheet(sheet));
 
 Hooks.on("item-piles-ready", async () => CastleFalkensteinModuleIntegration.integrateItemPiles());
 

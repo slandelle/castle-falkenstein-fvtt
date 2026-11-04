@@ -4,5 +4,7 @@
 # Node
 src/packs/node_modules
 
-# these are the folders which FoundryVTT creates when converting NEDB files
-build/packs/*/
+# LevelDB runtime files in compendium packs
+build/packs/*/LOCK
+build/packs/*/LOG
+build/packs/*/LOG.old
