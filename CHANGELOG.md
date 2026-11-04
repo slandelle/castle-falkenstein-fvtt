@@ -8,6 +8,8 @@
 + Compendium packs are now in the LevelDB format.
 ### Fixed
 + Dragging a character's ability, spell or item onto the macro hotbar raised an error.
++ French localization: document types in the creation dialogs, names of newly created items, the name placeholder on item sheets, spell field labels and several notifications were displayed in English or as raw translation keys.
++ An error was raised instead of a notification when a character had several diaries.
 
 ## [v3.11.0](https://github.com/admiralnlson/castle-falkenstein-fvtt/releases/tag/v3.11.0) - 2025/02/08
 ### Added

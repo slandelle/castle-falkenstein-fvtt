@@ -1,4 +1,17 @@
 {
+  "TYPES": {
+    "Actor": {
+      "character": "Personagem",
+      "loot": "Saque"
+    },
+    "Item": {
+      "ability": "Habilidade",
+      "weapon": "Arma",
+      "possession": "Posse",
+      "spell": "Feitiço"
+    }
+  },
+
   "castle-falkenstein": {
     "system": "Castelo Falkenstein",
 

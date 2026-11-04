@@ -11,7 +11,7 @@
             {{selectOptions availableRootAbilities selected=system.specializationOf localize=false inverted=true}}
           </select>
           <span class="spe-only">:</span>
-          <input name="name" type="text" value="{{item.name}}" placeholder="Name"/>
+          <input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'castle-falkenstein.name'}}"/>
           <select name="system.own.suit" class="suit-select own-only">
             {{selectOptions CASTLE_FALKENSTEIN.cardSuitsSymbols selected=system.own.suit localize=false}}
           </select>

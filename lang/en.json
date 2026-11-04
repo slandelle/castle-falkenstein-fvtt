@@ -1,5 +1,19 @@
 {
+  "TYPES": {
+    "Actor": {
+      "character": "Character",
+      "loot": "Loot"
+    },
+    "Item": {
+      "ability": "Ability",
+      "weapon": "Weapon",
+      "possession": "Possession",
+      "spell": "Spell"
+    }
+  },
+
   "castle-falkenstein": {
+    "name": "Name",
     "system": "Castle Falkenstein",
 
     "sheets": {
@@ -79,6 +93,8 @@
     },
 
     "notifications": {
+      "multipleHandsFound": "Several '{hand}' hands were found. Only one is expected.",
+      "multipleDiariesFound": "Several diaries were found for '{character}'. Only one is expected.",
       "babeleInstallRequired": "The Babele module is not installed! Install and activate it in order for Compendiums to be translated.",
       "babeleActivationRequired": "The Babele module is installed, but it is not active! Activate it in order for Compendiums to be translated.",
       "playerHasInsufficientOwnershipOnCardStacks": "Player '{player}' has insufficient ownership on:",
@@ -182,6 +198,12 @@
     },
 
     "item": {
+      "new": {
+        "ability": "New Ability",
+        "weapon": "New Weapon",
+        "possession": "New Possession",
+        "spell": "New Spell"
+      },
       "items": "Items",
       "item": "Item",
       "add": "Add",

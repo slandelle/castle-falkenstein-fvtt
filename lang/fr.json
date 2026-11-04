@@ -1,12 +1,26 @@
 {
+  "TYPES": {
+    "Actor": {
+      "character": "Personnage",
+      "loot": "Butin"
+    },
+    "Item": {
+      "ability": "Talent",
+      "weapon": "Arme",
+      "possession": "Possession",
+      "spell": "Sort"
+    }
+  },
+
   "castle-falkenstein": {
+    "name": "Nom",
     "system": "Château Falkenstein",
 
     "sheets": {
       "character": "Château Falkenstein - Personnage",
-      "loot": "Castle Falkenstein - Butin",
-      "hand": "Château Falkenstein - Main de cartes",
-      "deck": "Château Falkenstein - Pioche de cartes",
+      "loot": "Château Falkenstein - Butin",
+      "hand": "Château Falkenstein - Main",
+      "deck": "Château Falkenstein - Pioche",
       "ability": "Château Falkenstein - Talent",
       "weapon": "Château Falkenstein - Arme",
       "possession": "Château Falkenstein - Possession",
@@ -79,6 +93,8 @@
     },
 
     "notifications": {
+      "multipleHandsFound": "Plusieurs mains '{hand}' ont été trouvées. Une seule est attendue.",
+      "multipleDiariesFound": "Plusieurs journaux ont été trouvés pour '{character}'. Un seul est attendu.",
       "babeleInstallRequired": "Le module 'Babele' n'est pas installé ! Installez et activez-le afin que les Compendiums puissent être traduits.",
       "babeleActivationRequired": "Le module 'Babele' est installé, mais n'est pas activé ! Activez-le afin que les Compendiums puissent être traduits.",
       "playerHasInsufficientOwnershipOnCardStacks": "Le joueur '{player}' a des droits insuffisants sur :",
@@ -182,6 +198,12 @@
     },
 
     "item": {
+      "new": {
+        "ability": "Nouveau talent",
+        "weapon": "Nouvelle arme",
+        "possession": "Nouvelle possession",
+        "spell": "Nouveau sort"
+      },
       "items": "Objets",
       "item": "Objet",
       "add": "Ajouter",
@@ -212,12 +234,12 @@
       "exceptional": "Magistral",
       "extraordinary": "Prodigieux",
 
-      "poorAbbr": "PR",
-      "averageAbbr": "AV",
-      "goodAbbr": "GD",
-      "greatAbbr": "GR",
-      "exceptionalAbbr": "EXC",
-      "extraordinaryAbbr": "EXT",
+      "poorAbbr": "FAI",
+      "averageAbbr": "MOY",
+      "goodAbbr": "BON",
+      "greatAbbr": "EXC",
+      "exceptionalAbbr": "MAG",
+      "extraordinaryAbbr": "PRO",
 
       "specialization": "Spécialisation",
       "specializationDisplayName": "{rootAbility} : {specialization}"

@@ -103,9 +103,9 @@ export class CastleFalkensteinActor extends Actor {
     // Diaries are not deleted. But a notification saying it still exists does not hurt
     const diary = CastleFalkenstein.searchUniqueDiary(this);
     if (diary) {
-      CastleFalkenstein.notif.info("castle-falkenstein.notifications.deletedCharacterHadADiary", {
+      CastleFalkenstein.notif.info(game.i18n.format("castle-falkenstein.notifications.deletedCharacterHadADiary", {
         character: this.name
-      });
+      }));
     }
   }
 
@@ -237,7 +237,7 @@ export class CastleFalkensteinActor extends Actor {
 
     let hand = await this.hand("sorcery");
     if (!hand) {
-      CastleFalkenstein.notif.error(game.i18n.localize("castle-falkenstein.notifications.noSorceryHandforSpell"));
+      CastleFalkenstein.notif.error(game.i18n.localize("castle-falkenstein.notifications.noSorceryHandForSpell"));
       return;
     }
     
