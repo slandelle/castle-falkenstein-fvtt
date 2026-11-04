@@ -10,8 +10,8 @@ export class CastleFalkensteinWeaponSheet extends foundry.appv1.sheets.ItemSheet
   /** @override */
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: [CastleFalkenstein.id, "sheet", "item"],
-      template: "systems/castle-falkenstein/src/documents/item-sheet-weapon.hbs",
+      classes: ["castle-falkenstein", "sheet", "item"],
+      template: "systems/castle-falkenstein-slandelle/src/documents/item-sheet-weapon.hbs",
       width: 490,
       height: 300,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description" }]

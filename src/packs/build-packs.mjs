@@ -26,13 +26,13 @@ function prepareItem(item) {
     if (!item.system.level)
       item.system.level = "AV";
     if (!item.img)
-      item.img = `systems/castle-falkenstein/src/cards/${item.system.suit}.svg`;
+      item.img = `systems/castle-falkenstein-slandelle/src/cards/${item.system.suit}.svg`;
   } else if (item.type === "spell") {
     if (!item.img)
-      item.img = `systems/castle-falkenstein/src/cards/${item.system.suit}.svg`;
+      item.img = `systems/castle-falkenstein-slandelle/src/cards/${item.system.suit}.svg`;
   } else if (item.type === "weapon") {
     if (!item.img)
-      item.img = "systems/castle-falkenstein/src/img/saber-and-pistol.png";
+      item.img = "systems/castle-falkenstein-slandelle/src/img/saber-and-pistol.png";
     item.system.ammunition = item.system.ammunition_max;
   }
 }
@@ -57,7 +57,7 @@ async function buildPack(file) {
       item._key = `!items!${item._id}`;
       item.sort = counter * 100000; // CONST.SORT_INTEGER_DENSITY
       // Fixed timestamps (rather than Date.now()) so that rebuilding unchanged sources produces identical packs.
-      item._stats = { createdTime: STATS_TIME, modifiedTime: STATS_TIME, systemId: "castle-falkenstein" };
+      item._stats = { createdTime: STATS_TIME, modifiedTime: STATS_TIME, systemId: "castle-falkenstein-slandelle" };
       fs.writeFileSync(path.join(tmpDir, `${item._id}.json`), JSON.stringify(item));
     });
 

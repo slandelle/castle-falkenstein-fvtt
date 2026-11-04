@@ -10,8 +10,8 @@ export class CastleFalkensteinPossessionSheet extends foundry.appv1.sheets.ItemS
   /** @override */
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: [CastleFalkenstein.id, "sheet", "item"],
-      template: "systems/castle-falkenstein/src/documents/item-sheet-possession.hbs",
+      classes: ["castle-falkenstein", "sheet", "item"],
+      template: "systems/castle-falkenstein-slandelle/src/documents/item-sheet-possession.hbs",
       width: 460,
       height: 300,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description" }]

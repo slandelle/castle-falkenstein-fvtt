@@ -35,7 +35,7 @@
         "!**/node_modules/**"
       ],
       "pathMapping": {
-        "/systems/castle-falkenstein": "${workspaceFolder}",
+        "/systems/castle-falkenstein-slandelle": "${workspaceFolder}",
         "/systems/*": "${config:foundryvttDevFolder}/${config:foundryvttUserData}/Data/systems/*",
         "/modules": "${config:foundryvttDevFolder}/${config:foundryvttUserData}/Data/modules"
       },
@@ -91,7 +91,7 @@
         "!**/node_modules/**"
       ],
       "pathMapping": {
-        "/systems/castle-falkenstein": "${workspaceFolder}",
+        "/systems/castle-falkenstein-slandelle": "${workspaceFolder}",
         "/systems/*": "${config:foundryvttDevFolder}/${config:foundryvttUserData}/Data/systems/*",
         "/modules": "${config:foundryvttDevFolder}/${config:foundryvttUserData}/Data/modules"
       },
@@ -121,7 +121,7 @@
         "!**/node_modules/**"
       ],
       "pathMapping": {
-        "/systems/castle-falkenstein": "${workspaceFolder}",
+        "/systems/castle-falkenstein-slandelle": "${workspaceFolder}",
         "/systems/*": "${config:foundryvttDevFolder}/${config:foundryvttUserData}/Data/systems/*",
         "/modules": "${config:foundryvttDevFolder}/${config:foundryvttUserData}/Data/modules"
       },

@@ -22,7 +22,7 @@ import { CastleFalkensteinDefineSpell } from "./forms/define-spell.mjs";
 
 export class CastleFalkenstein {
 
-  static get id() { return "castle-falkenstein"; }
+  static get id() { return "castle-falkenstein-slandelle"; }
 
   static debug = false;
 
@@ -171,9 +171,9 @@ export class CastleFalkenstein {
         return;
 
       if (card.suit === "joker") {
-        if (card.faces[0].img === "systems/castle-falkenstein/src/cards/53.png")
+        if (card.faces[0].img === "systems/castle-falkenstein-slandelle/src/cards/53.png")
           card.name = card.faces[0].name = game.i18n.localize("castle-falkenstein.cards.blackJoker");
-        else if (card.faces[0].img === "systems/castle-falkenstein/src/cards/54.png")
+        else if (card.faces[0].img === "systems/castle-falkenstein-slandelle/src/cards/54.png")
           card.name = card.faces[0].name = game.i18n.localize("castle-falkenstein.cards.redJoker");
         else // just in case
           card.name = card.faces[0].name = game.i18n.localize("castle-falkenstein.cards.joker");
@@ -196,7 +196,7 @@ export class CastleFalkenstein {
   }
 
   static async createPresetDeck(type) {
-    const response = await fetch(`systems/castle-falkenstein/src/cards/deck-preset-${type}.json`);
+    const response = await fetch(`systems/castle-falkenstein-slandelle/src/cards/deck-preset-${type}.json`);
     const deckData = await response.json();
 
     // change the deck name to match its actual type 
@@ -462,13 +462,13 @@ export class CastleFalkenstein {
   }
 
   static usingRTGCardVisuals(deck) {
-    return deck?.img === "systems/castle-falkenstein/src/cards/back-square.png";
+    return deck?.img === "systems/castle-falkenstein-slandelle/src/cards/back-square.png";
   }
 
   static computeCardHeight(deck) {
     const cardWidth = CastleFalkenstein.settings.cardWidth;
 
-    if (deck?.img === "systems/castle-falkenstein/src/cards/back-square.png") {
+    if (deck?.img === "systems/castle-falkenstein-slandelle/src/cards/back-square.png") {
       return cardWidth * 670 / 470;
     }
     else if (deck && deck.width > 0 && deck.height > 0) {
@@ -482,7 +482,7 @@ export class CastleFalkenstein {
   static smallCardImg(card, classes) {
     const suit = card.suit;
     const value = card.suit === "joker" ? (card.name === game.i18n.localize("castle-falkenstein.cards.blackJoker") ? "black" : "red") : card.value;
-    return `<img class="${classes}" src="systems/castle-falkenstein/src/cards/small/${suit}-${value}.svg" alt="${card.name}"></img>`;
+    return `<img class="${classes}" src="systems/castle-falkenstein-slandelle/src/cards/small/${suit}-${value}.svg" alt="${card.name}"></img>`;
   }
 
   static cardSuitHTML(suit) {
@@ -548,12 +548,12 @@ export class CastleFalkenstein {
     CONFIG.Cards.presets.castleFalkensteinFortuneDeck = {
       type: "deck",
       label: "castle-falkenstein.settings.fortuneDeck.name",
-      src: "systems/castle-falkenstein/src/cards/deck-preset-fortune.json"
+      src: "systems/castle-falkenstein-slandelle/src/cards/deck-preset-fortune.json"
     };
     CONFIG.Cards.presets.castleFalkensteinSorceryDeck = {
       type: "deck",
       label: "castle-falkenstein.settings.sorceryDeck.name",
-      src: "systems/castle-falkenstein/src/cards/deck-preset-sorcery.json"
+      src: "systems/castle-falkenstein-slandelle/src/cards/deck-preset-sorcery.json"
     };
 
     this.registerSettings();
@@ -632,9 +632,9 @@ export class CastleFalkenstein {
 
       const itemUpdates = (items) => {
         return items.filter(i => i.type === "weapon" && i.img === "icons/svg/item-bag.svg").map(item => {
-          return {_id: item.id, img: "systems/castle-falkenstein/src/img/saber-and-pistol.png"};
+          return {_id: item.id, img: "systems/castle-falkenstein-slandelle/src/img/saber-and-pistol.png"};
         }).concat(items.filter(i => (i.type === "ability" || i.type === "spell") && i.img === "icons/svg/item-bag.svg").map(item => {
-          return {_id: item.id, img: `systems/castle-falkenstein/src/cards/${item.system.suit}.svg`};
+          return {_id: item.id, img: `systems/castle-falkenstein-slandelle/src/cards/${item.system.suit}.svg`};
         }));
       };
 
@@ -656,7 +656,7 @@ export class CastleFalkenstein {
 
       {
         const macrosToUpdate = game.macros.filter(m => m.img === "icons/svg/item-bag.svg" && m.command?.startsWith("game.CastleFalkenstein.rollItemMacro(\"weapon\",")).map(macro => {
-          return {_id: macro.id, img: "systems/castle-falkenstein/src/img/saber-and-pistol.png"};
+          return {_id: macro.id, img: "systems/castle-falkenstein-slandelle/src/img/saber-and-pistol.png"};
         });
         // no update for spell and ability macros, because no info on which suit they depend on.
         if (macrosToUpdate.length > 0) {
@@ -934,10 +934,10 @@ export class CastleFalkenstein {
   static async preLoadTemplates() {
     return foundry.applications.handlebars.loadTemplates([
       // Actor partials
-      "systems/castle-falkenstein/src/documents/actor-character-sheet-abilities.hbs",
-      "systems/castle-falkenstein/src/documents/actor-character-sheet-possessions.hbs",
-      "systems/castle-falkenstein/src/documents/actor-character-sheet-spells.hbs",
-      "systems/castle-falkenstein/src/documents/actor-loot-items-sheet.hbs"
+      "systems/castle-falkenstein-slandelle/src/documents/actor-character-sheet-abilities.hbs",
+      "systems/castle-falkenstein-slandelle/src/documents/actor-character-sheet-possessions.hbs",
+      "systems/castle-falkenstein-slandelle/src/documents/actor-character-sheet-spells.hbs",
+      "systems/castle-falkenstein-slandelle/src/documents/actor-loot-items-sheet.hbs"
     ]);
   }
 
@@ -978,7 +978,7 @@ export class CastleFalkenstein {
       if (!doc.img) {
         if (doc instanceof JournalEntry) {
           if (doc.getFlag(CastleFalkenstein.id, "type") === "diary")
-            doc.img = "systems/castle-falkenstein/src/img/secret-book-white.svg";
+            doc.img = "systems/castle-falkenstein-slandelle/src/img/secret-book-white.svg";
           else
             doc.img = "icons/svg/book.svg";
         }

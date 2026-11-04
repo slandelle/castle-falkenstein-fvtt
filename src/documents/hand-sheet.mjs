@@ -19,7 +19,7 @@ export class CastleFalkensteinHandSheet extends HandlebarsApplicationMixin(Docum
 
   /** @override */
   static DEFAULT_OPTIONS = {
-    classes: ["castle-falkenstein", "sheet", "cards-hand", "cards-config"], // not CastleFalkenstein.id: circular import, evaluated at class definition
+    classes: ["castle-falkenstein", "sheet", "cards-hand", "cards-config"], // CSS class, not the system id
     position: {
       width: 350,
       height: CastleFalkensteinHandSheet.HEIGHT_WITHOUT_FEAT_OR_SPELL
@@ -49,7 +49,7 @@ export class CastleFalkensteinHandSheet extends HandlebarsApplicationMixin(Docum
   /** @override */
   static PARTS = {
     hand: {
-      template: "systems/castle-falkenstein/src/documents/hand-sheet.hbs"
+      template: "systems/castle-falkenstein-slandelle/src/documents/hand-sheet.hbs"
     }
   };
 

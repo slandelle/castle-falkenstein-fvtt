@@ -10,8 +10,8 @@ export class CastleFalkensteinDefineSpell extends foundry.appv1.api.FormApplicat
     return foundry.utils.mergeObject(super.defaultOptions, {
       id: "castle-falkenstein-define-spell",
       title: game.i18n.localize("castle-falkenstein.sorcery.defineSpell"),
-      template: "./systems/castle-falkenstein/src/forms/define-spell.hbs",
-      classes: [CastleFalkenstein.id, "castle-falkenstein-define-spell", "sheet"],
+      template: "./systems/castle-falkenstein-slandelle/src/forms/define-spell.hbs",
+      classes: ["castle-falkenstein", "castle-falkenstein-define-spell", "sheet"],
       width: 400,
       height: "auto",
       closeOnSubmit: true,

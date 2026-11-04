@@ -10,8 +10,8 @@ export class CastleFalkensteinSpellSheet extends foundry.appv1.sheets.ItemSheet 
   /** @override */
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: [CastleFalkenstein.id, "sheet", "item"],
-      template: "systems/castle-falkenstein/src/documents/item-sheet-spell.hbs",
+      classes: ["castle-falkenstein", "sheet", "item"],
+      template: "systems/castle-falkenstein-slandelle/src/documents/item-sheet-spell.hbs",
       width: 460,
       height: 300,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description" }]

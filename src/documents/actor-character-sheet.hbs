@@ -13,12 +13,12 @@
           <a class="diary-show" disabled {{#if userHasObserverOrOwnerAccess}}{{#if actor.isToken}}data-tooltip="{{localize "castle-falkenstein.diary.cannotBeUsedOnUnlinkedTokens"}}"{{/if}}{{/if}}>
           {{/if}}
           {{#if diaryVisible}}
-            <img alt="{{diaryName}}" src="systems/castle-falkenstein/src/img/bookmarklet-444.svg">
+            <img alt="{{diaryName}}" src="systems/castle-falkenstein-slandelle/src/img/bookmarklet-444.svg">
           {{else}}
             {{#if canOpenDiary}}
-              <img alt="{{diaryName}}" src="systems/castle-falkenstein/src/img/secret-book-444.svg">
+              <img alt="{{diaryName}}" src="systems/castle-falkenstein-slandelle/src/img/secret-book-444.svg">
             {{else}}
-              <img alt="{{diaryName}}" src="systems/castle-falkenstein/src/img/secret-book-7a7971.svg">
+              <img alt="{{diaryName}}" src="systems/castle-falkenstein-slandelle/src/img/secret-book-7a7971.svg">
             {{/if}}
           {{/if}}
           </a>
@@ -72,17 +72,17 @@
     {{#if userHasObserverOrOwnerAccess}}
       {{!-- Abilities Tab --}}
       <div class="tab abilities" data-group="primary" data-tab="abilities">
-        {{> "systems/castle-falkenstein/src/documents/actor-character-sheet-abilities.hbs"}}
+        {{> "systems/castle-falkenstein-slandelle/src/documents/actor-character-sheet-abilities.hbs"}}
       </div>
 
       {{!-- Possessions Tab --}}
       <div class="tab possessions" data-group="primary" data-tab="possessions">
-        {{> "systems/castle-falkenstein/src/documents/actor-character-sheet-possessions.hbs"}}
+        {{> "systems/castle-falkenstein-slandelle/src/documents/actor-character-sheet-possessions.hbs"}}
       </div>
 
       {{!-- Spells Tab --}}
       <div class="tab spells" data-group="primary" data-tab="spells">
-        {{> "systems/castle-falkenstein/src/documents/actor-character-sheet-spells.hbs"}}
+        {{> "systems/castle-falkenstein-slandelle/src/documents/actor-character-sheet-spells.hbs"}}
       </div>
 
       {{!-- Host Notes Tab --}}

@@ -10,8 +10,8 @@ export class CastleFalkensteinCharacterSheet extends CastleFalkensteinLootSheet 
   /** @override */
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: [CastleFalkenstein.id, "sheet", "actor", "character"],
-      template: "systems/castle-falkenstein/src/documents/actor-character-sheet.hbs",
+      classes: ["castle-falkenstein", "sheet", "actor", "character"],
+      template: "systems/castle-falkenstein-slandelle/src/documents/actor-character-sheet.hbs",
       width: 620,
       height: 600,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description" }],

@@ -6,6 +6,7 @@
 + Card hands use the new ApplicationV2 framework. They can be detached into separate windows with Foundry V14's native feature, which replaces the 'PopOut!' module integration.
 + The chat message visibility selector now only offers "Public message" and "Private message to the Host", in the core chat controls.
 + Compendium packs are now in the LevelDB format.
++ The system id is now `castle-falkenstein-slandelle`, so this fork can be installed alongside the original `castle-falkenstein` system. **Worlds created with the original system cannot be opened with this one.**
 ### Fixed
 + Dragging a character's ability, spell or item onto the macro hotbar raised an error.
 + French localization: document types in the creation dialogs, names of newly created items, the name placeholder on item sheets, spell field labels and several notifications were displayed in English or as raw translation keys.

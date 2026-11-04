@@ -1,5 +1,5 @@
 {
-  "id": "castle-falkenstein",
+  "id": "castle-falkenstein-slandelle",
   "title": "Castle Falkenstein",
   "description": "FoundryVTT system for Castle Falkenstein.",
   "version": "0.0.0",
@@ -26,7 +26,7 @@
   "media": [
     {
       "type": "setup",
-      "url": "systems/castle-falkenstein/src/img/castle-falkenstein-banner-large.jpg"
+      "url": "systems/castle-falkenstein-slandelle/src/img/castle-falkenstein-banner-large.jpg"
     }
   ],
   "flags": {
@@ -105,133 +105,133 @@
       "path": "build/packs/abilities",
       "name": "abilities",
       "type": "Item",
-      "system": "castle-falkenstein"
+      "system": "castle-falkenstein-slandelle"
     },
     {
       "label": "Manuscriptum Mentallis",
       "path": "build/packs/spells-1",
       "name": "spells-1",
       "type": "Item",
-      "system": "castle-falkenstein"
+      "system": "castle-falkenstein-slandelle"
     },
     {
       "label": "Ritual Writing of Psychic Binding",
       "path": "build/packs/spells-2",
       "name": "spells-2",
       "type": "Item",
-      "system": "castle-falkenstein"
+      "system": "castle-falkenstein-slandelle"
     },
     {
       "label": "Agrivicca Rexus' Realm of Illusion",
       "path": "build/packs/spells-3",
       "name": "spells-3",
       "type": "Item",
-      "system": "castle-falkenstein"
+      "system": "castle-falkenstein-slandelle"
     },
     {
       "label": "Megron's Realm of Dreaming",
       "path": "build/packs/spells-4",
       "name": "spells-4",
       "type": "Item",
-      "system": "castle-falkenstein"
+      "system": "castle-falkenstein-slandelle"
     },
     {
       "label": "Realm of The Unknown Mind",
       "path": "build/packs/spells-5",
       "name": "spells-5",
       "type": "Item",
-      "system": "castle-falkenstein"
+      "system": "castle-falkenstein-slandelle"
     },
     {
       "label": "Libram of Mystic Transformation",
       "path": "build/packs/spells-6",
       "name": "spells-6",
       "type": "Item",
-      "system": "castle-falkenstein"
+      "system": "castle-falkenstein-slandelle"
     },
     {
       "label": "The Manuscriptum Universal Alchemic",
       "path": "build/packs/spells-7",
       "name": "spells-7",
       "type": "Item",
-      "system": "castle-falkenstein"
+      "system": "castle-falkenstein-slandelle"
     },
     {
       "label": "Osman's Tome of Physical Movement",
       "path": "build/packs/spells-8",
       "name": "spells-8",
       "type": "Item",
-      "system": "castle-falkenstein"
+      "system": "castle-falkenstein-slandelle"
     },
     {
       "label": "Libram of Temporal Control",
       "path": "build/packs/spells-9",
       "name": "spells-9",
       "type": "Item",
-      "system": "castle-falkenstein"
+      "system": "castle-falkenstein-slandelle"
     },
     {
       "label": "Libram of Summonation",
       "path": "build/packs/spells-10",
       "name": "spells-10",
       "type": "Item",
-      "system": "castle-falkenstein"
+      "system": "castle-falkenstein-slandelle"
     },
     {
       "label": "LeRoeun's Scrolls of Dimensional Movement",
       "path": "build/packs/spells-11",
       "name": "spells-11",
       "type": "Item",
-      "system": "castle-falkenstein"
+      "system": "castle-falkenstein-slandelle"
     },
     {
       "label": "Dark Libram of Necromancy",
       "path": "build/packs/spells-12",
       "name": "spells-12",
       "type": "Item",
-      "system": "castle-falkenstein"
+      "system": "castle-falkenstein-slandelle"
     },
     {
       "label": "Manuscript of Paranormal Divination",
       "path": "build/packs/spells-13",
       "name": "spells-13",
       "type": "Item",
-      "system": "castle-falkenstein"
+      "system": "castle-falkenstein-slandelle"
     },
     {
       "label": "Manuscript of Elemental Shaping",
       "path": "build/packs/spells-14",
       "name": "spells-14",
       "type": "Item",
-      "system": "castle-falkenstein"
+      "system": "castle-falkenstein-slandelle"
     },
     {
       "label": "Burton's On the Raised Forces of Nature",
       "path": "build/packs/spells-15",
       "name": "spells-15",
       "type": "Item",
-      "system": "castle-falkenstein"
+      "system": "castle-falkenstein-slandelle"
     },
     {
       "label": "The Manual of Primal Forces Raised",
       "path": "build/packs/spells-16",
       "name": "spells-16",
       "type": "Item",
-      "system": "castle-falkenstein"
+      "system": "castle-falkenstein-slandelle"
     },
     {
       "label": "lshigami's Realm of the Senses",
       "path": "build/packs/spells-17",
       "name": "spells-17",
       "type": "Item",
-      "system": "castle-falkenstein"
+      "system": "castle-falkenstein-slandelle"
     },
     {
       "label": "Weapons",
       "path": "build/packs/weapons",
       "name": "weapons",
       "type": "Item",
-      "system": "castle-falkenstein"
+      "system": "castle-falkenstein-slandelle"
     }
   ],
   "languages": [
