@@ -267,8 +267,10 @@ export class CastleFalkenstein {
                                      stack.getFlag(this.id, "actor") === actorFlag);
 
     if (search.length > 1) {
-      const name = (actorFlag === "host") ? "host" : actor.name;
-      CastleFalkenstein.notif.error("Multiple " + handType + " hands found for " + name);
+      const character = (actorFlag === "host") ? game.i18n.localize("castle-falkenstein.host") : actor.name;
+      CastleFalkenstein.notif.error(game.i18n.format("castle-falkenstein.notifications.multipleHandsFound", {
+        hand: game.i18n.format(`castle-falkenstein.${handType}.hand.name`, { character })
+      }));
       return null;
     }
     
@@ -288,7 +290,9 @@ export class CastleFalkenstein {
     const search = game.journal.filter(je => je.getFlag(this.id, "type") === "diary" && je.getFlag(this.id, "actor") === actorFlag);
 
     if (search.length > 1) {
-      CastleFalkenstein.notif.error("Multiple " + handType + " hands found for " + actor.name);
+      CastleFalkenstein.notif.error(game.i18n.format("castle-falkenstein.notifications.multipleDiariesFound", {
+        character: actor.name
+      }));
       return;
     }
     

@@ -127,7 +127,7 @@ export class CastleFalkensteinCharacterSheet extends CastleFalkensteinLootSheet 
     // Get the type of item to create.
     const type = header.dataset.type;
     // Initialize a default name.
-    const name = `New ${type.capitalize()}`;
+    const name = game.i18n.localize(`castle-falkenstein.item.new.${type}`);
     // Prepare the item object.
     const itemData = {
       name: name,
