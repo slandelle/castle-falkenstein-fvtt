@@ -7,6 +7,9 @@ on:
         description: 'Version for the release'
         required: true
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -17,11 +20,10 @@ jobs:
       run: |
         echo "version_without_v=$(echo ${{ github.event.inputs.version }} | sed 's/^v//')" >> $GITHUB_OUTPUT
 
-    - name: Checkout master
-      id: checkout-master
-      uses: actions/checkout@v2
+    - name: Checkout default branch
+      id: checkout-default-branch
+      uses: actions/checkout@v4
       with:
-        ref: 'master'
         fetch-depth: 0
   
     - name: Get changelog entry
@@ -33,20 +35,21 @@ jobs:
   
     - name: Checkout tag
       id: checkout-tag
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         ref: 'refs/tags/${{ github.event.inputs.version }}'
         fetch-depth: 0
 
     - name: Substitute version, manifest, url and download link in system.json
-      uses: microsoft/variable-substitution@v1
-      with:
-        files: 'system.json'
       env:
-        version: ${{steps.get-version-without-v.outputs.version_without_v}}
-        download: https://github.com/${{github.repository}}/releases/download/${{github.event.inputs.version}}/castle-falkenstein.zip
-        manifest: https://github.com/${{github.repository}}/releases/latest/download/system.json
-        url: https://github.com/${{github.repository}}
+        VERSION: ${{steps.get-version-without-v.outputs.version_without_v}}
+        DOWNLOAD: https://github.com/${{github.repository}}/releases/download/${{github.event.inputs.version}}/castle-falkenstein.zip
+        MANIFEST: https://github.com/${{github.repository}}/releases/latest/download/system.json
+        URL: https://github.com/${{github.repository}}
+      run: |
+        jq --arg version "$VERSION" --arg download "$DOWNLOAD" --arg manifest "$MANIFEST" --arg url "$URL" \
+          '.version = $version | .download = $download | .manifest = $manifest | .url = $url' \
+          system.json > system.json.tmp && mv system.json.tmp system.json
 
     - name: Create minimal system zip file
       run: zip -r ./castle-falkenstein.zip system.json LICENSE src/ lang/ build/

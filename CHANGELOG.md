@@ -1,6 +1,6 @@
 # Changelog
 
-## [v4.0.0](https://github.com/admiralnlson/castle-falkenstein-fvtt/releases/tag/v4.0.0) - unreleased
+## [v4.0.0](https://github.com/slandelle/castle-falkenstein-fvtt/releases/tag/v4.0.0) - 2026/11/04
 ### Changed
 + Compatibility with Foundry VTT V13 and V14. **Foundry V9 to V12 are no longer supported** (use v3.11.0 or earlier).
 + Card hands use the new ApplicationV2 framework. They can be detached into separate windows with Foundry V14's native feature, which replaces the 'PopOut!' module integration.
