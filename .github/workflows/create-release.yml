@@ -38,13 +38,15 @@ jobs:
         ref: 'refs/tags/${{ github.event.inputs.version }}'
         fetch-depth: 0
 
-    - name: Substitute version and download link in system.json
+    - name: Substitute version, manifest, url and download link in system.json
       uses: microsoft/variable-substitution@v1
       with:
         files: 'system.json'
       env:
         version: ${{steps.get-version-without-v.outputs.version_without_v}}
         download: https://github.com/${{github.repository}}/releases/download/${{github.event.inputs.version}}/castle-falkenstein.zip
+        manifest: https://github.com/${{github.repository}}/releases/latest/download/system.json
+        url: https://github.com/${{github.repository}}
 
     - name: Create minimal system zip file
       run: zip -r ./castle-falkenstein.zip system.json LICENSE src/ lang/ build/
