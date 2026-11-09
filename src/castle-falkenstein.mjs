@@ -146,7 +146,7 @@ export class CastleFalkenstein {
       name: name,
       type: documentType,
       sorting: "m",
-      "flags.castle-falkenstein": folderFlag
+      [`flags.${CastleFalkenstein.id}`]: folderFlag
     });
     return newFolder;
   }
@@ -380,7 +380,7 @@ export class CastleFalkenstein {
         name: game.i18n.format(`castle-falkenstein.fortune.hand.name`, { character: game.i18n.localize("castle-falkenstein.host") }),
         displayCount: true,
         folder: null, // the GM may freely move the hand to whatever folder they wish afterwards
-        "flags.castle-falkenstein": { type: handType, actor: "host" }
+        [`flags.${CastleFalkenstein.id}`]: { type: handType, actor: "host" }
       };
     } else {
       // create character fortune or sorcery hand
@@ -390,7 +390,7 @@ export class CastleFalkenstein {
         displayCount: true,
         ownership: actor.ownership, // hands inherit the ownership from the actor they belong to
         folder: (await CastleFalkenstein.cardsFolder("character-hands", game.i18n.localize("castle-falkenstein.cardsDirectory.characterHandsFolder"))).id,
-        "flags.castle-falkenstein": { type: handType, actor: actor.id }
+        [`flags.${CastleFalkenstein.id}`]: { type: handType, actor: actor.id }
       };
     }
 
@@ -416,7 +416,7 @@ export class CastleFalkenstein {
       name: actor.computeDiaryName(),
       ownership: actor.ownership, // diary inherit the ownership from the actor they belong to
       folder: (await CastleFalkenstein.diariesFolder(game.i18n.localize("castle-falkenstein.journalDirectory.characterDiariesFolder"))).id,
-      "flags.castle-falkenstein": { type: "diary", actor: actor.id }
+      [`flags.${CastleFalkenstein.id}`]: { type: "diary", actor: actor.id }
     };
 
     if (diaryData) {
@@ -512,7 +512,7 @@ export class CastleFalkenstein {
     const messageData = {
       flavor: flavor,
       content: content,
-      "flags.castle-falkenstein": { type: flavor }
+      [`flags.${CastleFalkenstein.id}`]: { type: flavor }
     };
 
     if (actor !== "gm") {

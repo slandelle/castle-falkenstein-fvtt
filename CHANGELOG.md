@@ -1,5 +1,9 @@
 # Changelog
 
+## [v4.0.1](https://github.com/slandelle/castle-falkenstein-fvtt/releases/tag/v4.0.1) - 2026/11/09
+### Fixed
++ Character diaries, card hands, decks and folders were created again every time instead of being reused (regression from the system id change in v4.0.0).
+
 ## [v4.0.0](https://github.com/slandelle/castle-falkenstein-fvtt/releases/tag/v4.0.0) - 2026/11/04
 ### Changed
 + Compatibility with Foundry VTT V13 and V14. **Foundry V9 to V12 are no longer supported** (use v3.11.0 or earlier).
