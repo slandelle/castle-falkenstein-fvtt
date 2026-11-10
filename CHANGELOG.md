@@ -1,5 +1,9 @@
 # Changelog
 
+## [v4.0.2](https://github.com/slandelle/castle-falkenstein-fvtt/releases/tag/v4.0.2) - 2026/11/10
+### Fixed
++ Worlds created with the original Castle Falkenstein system (or with v4.0.0) lost track of their character diaries, card hands, decks, folders and settings, which were stored under the original system id, so new empty ones were created instead. They are now migrated when the Host first logs in, and the duplicates created by v4.0.0/v4.0.1 are merged back into the originals: pages written in a duplicate diary are moved to the original one, and cards drawn into a duplicate hand go back to their deck.
+
 ## [v4.0.1](https://github.com/slandelle/castle-falkenstein-fvtt/releases/tag/v4.0.1) - 2026/11/09
 ### Fixed
 + Character diaries, card hands, decks and folders were created again every time instead of being reused (regression from the system id change in v4.0.0).

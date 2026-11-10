@@ -19,6 +19,7 @@ import { CastleFalkensteinPossessionSheet } from "./documents/item-sheet-possess
 import { CastleFalkensteinSpellSheet } from "./documents/item-sheet-spell.mjs";
 import { CastleFalkensteinItem } from "./documents/item.mjs";
 import { CastleFalkensteinDefineSpell } from "./forms/define-spell.mjs";
+import { migrateFromOriginalSystem } from "./migration.mjs";
 
 export class CastleFalkenstein {
 
@@ -595,6 +596,8 @@ export class CastleFalkenstein {
   
     const coreHandSheet = CONFIG.Cards.sheetClasses.hand?.["core.CardHandConfig"];
     if (coreHandSheet) coreHandSheet.canBeDefault = false;
+
+    await migrateFromOriginalSystem();
 
     await this.prepareCardStacks();
 
